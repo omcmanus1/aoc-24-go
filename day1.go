@@ -9,7 +9,7 @@ import (
 )
 
 func OneOne() {
-	listOne, listTwo := buildLists("day1input.txt")
+	listOne, listTwo := buildLists("inputs/day1input.txt")
 	sortListDescending(listOne)
 	sortListDescending(listTwo)
 	var totalDifference int
@@ -21,7 +21,7 @@ func OneOne() {
 }
 
 func OneTwo() {
-	listOne, listTwo := buildLists("day1input.txt")
+	listOne, listTwo := buildLists("inputsday1input.txt")
 	similarityScore := 0
 	for _, listOneVal := range listOne {
 		instanceCount := 0
