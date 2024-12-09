@@ -9,32 +9,27 @@ import (
 
 func TwoOne() {
 	reports := getReports("day2input.txt")
-
 	safeCount := 0
 	for _, report := range reports {
 		safe := compareLevels(report)
 		safeCount += safe
 	}
-
 	fmt.Println("Safe Count: ", safeCount)
 }
 
 func TwoTwo() {
 	reports := getReports("day2input.txt")
-
 	safeCount := 0
 	for _, report := range reports {
 		safe := compareLevelsWithDampener(report)
 		safeCount += safe
 	}
-
 	fmt.Println("Safe Count: ", safeCount)
 }
 
 func getReports(path string) [][]int {
 	scanner, file := GetFileScanner(path)
 	defer file.Close()
-
 	var reports [][]int
 	for scanner.Scan() {
 		var reportNums []int
@@ -46,7 +41,6 @@ func getReports(path string) [][]int {
 		}
 		reports = append(reports, reportNums)
 	}
-
 	return reports
 }
 
@@ -64,16 +58,15 @@ func compareLevels(report []int) int {
 }
 
 func compareLevelsWithDampener(report []int) int {
-	initialDiff := report[1] - report[0]
-	safe := 1
-	for i := 0; i < len(report)-1; i++ {
-		difference := report[i+1] - report[i]
-		if difference*initialDiff <= 0 || int(math.Abs(float64(difference))) > 3 {
-			newReport := append(report[:i+1], report[i+2:]...)
-			if len(newReport) < 2 {
-				return 0
+	safe := compareLevels(report)
+	if safe == 0 {
+		for i := range report {
+			reportCopy := arrayCopy(report)
+			newReport := append(reportCopy[:i], reportCopy[i+1:]...)
+			oneRemovedSafe := compareLevels(newReport)
+			if oneRemovedSafe == 1 {
+				return 1
 			}
-			safe = compareLevels(newReport)
 		}
 	}
 	return safe

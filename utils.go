@@ -37,3 +37,9 @@ func StringToInt(input string) int {
 	}
 	return output
 }
+
+func arrayCopy(orig []int) []int {
+	newNums := make([]int, len(orig))
+	copy(newNums, orig[:])
+	return newNums
+}
