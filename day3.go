@@ -8,13 +8,13 @@ import (
 )
 
 func ThreeOne() {
-	text := getFileText("day3input.txt")
+	text := getFileText("inputs/day3input.txt")
 	total := addMultiplications(text)
 	fmt.Println("Total: ", total)
 }
 
 func ThreeTwo() {
-	text := getFileText("day3input.txt")
+	text := getFileText("inputs/day3input.txt")
 	groups := strings.Split(text, "don't()")
 	var matches string
 	for i, group := range groups {
