@@ -8,20 +8,18 @@ import (
 )
 
 func TwoOne() {
-	reports := getReports("day2input.txt")
-	safeCount := 0
-	for _, report := range reports {
-		safe := compareLevels(report)
-		safeCount += safe
-	}
-	fmt.Println("Safe Count: ", safeCount)
+	mainProcess(compareLevels)
 }
 
 func TwoTwo() {
-	reports := getReports("day2input.txt")
+	mainProcess(compareLevelsWithDampener)
+}
+
+func mainProcess(fn func([]int) int) {
+	reports := getReports("inputs/day2input.txt")
 	safeCount := 0
 	for _, report := range reports {
-		safe := compareLevelsWithDampener(report)
+		safe := fn(report)
 		safeCount += safe
 	}
 	fmt.Println("Safe Count: ", safeCount)
