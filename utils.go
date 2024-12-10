@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 )
 
@@ -42,4 +43,13 @@ func arrayCopy(orig []int) []int {
 	newNums := make([]int, len(orig))
 	copy(newNums, orig[:])
 	return newNums
+}
+
+func ArrayContainsDeep(coords [][]int, target []int) bool {
+	for _, c := range coords {
+		if reflect.DeepEqual(c, target) {
+			return true
+		}
+	}
+	return false
 }

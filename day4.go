@@ -5,26 +5,45 @@ import (
 	"strings"
 )
 
-const word = "XMAS"
-
 func FourOne() {
 	lines := getLines("inputs/day4input.txt")
+	word := "XMAS"
 	found := 0
 	for x := 0; x < len(lines); x++ {
 		for y := 0; y < len(lines[x]); y++ {
-			if lines[x][y] == "X" {
-				checkEast(lines, x, y, &found)
-				checkWest(lines, x, y, &found)
-				checkNorth(lines, x, y, &found)
-				checkSouth(lines, x, y, &found)
-				checkNorthEast(lines, x, y, &found)
-				checkNorthWest(lines, x, y, &found)
-				checkSouthEast(lines, x, y, &found)
-				checkSouthWest(lines, x, y, &found)
+			found += checkEast(lines, x, y, word)
+			found += checkWest(lines, x, y, word)
+			found += checkNorth(lines, x, y, word)
+			found += checkSouth(lines, x, y, word)
+			found += checkNorthEast(lines, x, y, word)
+			found += checkNorthWest(lines, x, y, word)
+			found += checkSouthEast(lines, x, y, word)
+			found += checkSouthWest(lines, x, y, word)
+		}
+	}
+	fmt.Printf("Found %d occurrences\n", found)
+}
+
+func FourTwo() {
+	lines := getLines("inputs/day4input.txt")
+	word1 := "MAS"
+	word2 := "SAM"
+	found := 0
+	for x := 0; x < len(lines); x++ {
+		for y := 0; y < len(lines[x]); y++ {
+			if checkSouthEast(lines, x, y, word1) == 1 {
+				if checkSouthWest(lines, x, y+2, word1) == 1 || checkNorthEast(lines, x+2, y, word1) == 1 {
+					found++
+				}
+			}
+			if checkSouthEast(lines, x, y, word2) == 1 {
+				if checkSouthWest(lines, x, y+2, word2) == 1 || checkNorthEast(lines, x+2, y, word2) == 1 {
+					found++
+				}
 			}
 		}
 	}
-	fmt.Printf("Found %d occurrences of %s\n", found, word)
+	fmt.Printf("Found %d occurrences\n", found)
 }
 
 func getLines(path string) [][]string {
@@ -39,90 +58,114 @@ func getLines(path string) [][]string {
 	return lines
 }
 
-func checkEast(lines [][]string, x, y int, found *int) {
-	if y+3 < len(lines[x]) {
-		for i := 0; i < 4; i++ {
-			if lines[x][y+i] != string(word[i]) {
-				return
+func checkEast(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if y+(len(word)-1) < len(lines[x]) {
+			for i := 0; i < len(word); i++ {
+				if lines[x][y+i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkWest(lines [][]string, x, y int, found *int) {
-	if y-3 >= 0 {
-		for i := 0; i < 4; i++ {
-			if lines[x][y-i] != string(word[i]) {
-				return
+func checkWest(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if y-(len(word)-1) >= 0 {
+			for i := 0; i < len(word); i++ {
+				if lines[x][y-i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkNorth(lines [][]string, x, y int, found *int) {
-	if x-3 >= 0 {
-		for i := 0; i < 4; i++ {
-			if lines[x-i][y] != string(word[i]) {
-				return
+func checkNorth(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x-(len(word)-1) >= 0 {
+			for i := 0; i < len(word); i++ {
+				if lines[x-i][y] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkSouth(lines [][]string, x, y int, found *int) {
-	if x+3 < len(lines) {
-		for i := 0; i < 4; i++ {
-			if lines[x+i][y] != string(word[i]) {
-				return
+func checkSouth(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x+(len(word)-1) < len(lines) {
+			for i := 0; i < len(word); i++ {
+				if lines[x+i][y] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkNorthEast(lines [][]string, x, y int, found *int) {
-	if x-3 >= 0 && y+3 < len(lines[x]) {
-		for i := 0; i < 4; i++ {
-			if lines[x-i][y+i] != string(word[i]) {
-				return
+func checkNorthEast(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x-(len(word)-1) >= 0 && y+(len(word)-1) < len(lines[x]) {
+			for i := 0; i < len(word); i++ {
+				if lines[x-i][y+i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkNorthWest(lines [][]string, x, y int, found *int) {
-	if x-3 >= 0 && y-3 >= 0 {
-		for i := 0; i < 4; i++ {
-			if lines[x-i][y-i] != string(word[i]) {
-				return
+func checkNorthWest(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x-(len(word)-1) >= 0 && y-(len(word)-1) >= 0 {
+			for i := 0; i < len(word); i++ {
+				if lines[x-i][y-i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkSouthEast(lines [][]string, x, y int, found *int) {
-	if x+3 < len(lines) && y+3 < len(lines[x]) {
-		for i := 0; i < 4; i++ {
-			if lines[x+i][y+i] != string(word[i]) {
-				return
+func checkSouthEast(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x+(len(word)-1) < len(lines) && y+(len(word)-1) < len(lines[x]) {
+			for i := 0; i < len(word); i++ {
+				if lines[x+i][y+i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
 
-func checkSouthWest(lines [][]string, x, y int, found *int) {
-	if x+3 < len(lines) && y-3 >= 0 {
-		for i := 0; i < 4; i++ {
-			if lines[x+i][y-i] != string(word[i]) {
-				return
+func checkSouthWest(lines [][]string, x, y int, word string) int {
+	if lines[x][y] == string(word[0]) {
+		if x+(len(word)-1) < len(lines) && y-(len(word)-1) >= 0 {
+			for i := 0; i < len(word); i++ {
+				if lines[x+i][y-i] != string(word[i]) {
+					return 0
+				}
 			}
+			return 1
 		}
-		*found++
 	}
+	return 0
 }
