@@ -2,18 +2,27 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 )
 
 func FiveOne() {
 	pairs, updates := parseInput("inputs/day5input.txt")
-	verifiedUpdates := verifyUpdates(updates, pairs)
-	middleNums := getMiddleNums(verifiedUpdates)
+	verifiedUpdates, _ := verifyUpdates(updates, pairs)
+	middleNums := addMiddleNums(verifiedUpdates)
 	fmt.Println(middleNums)
 }
 
-func getMiddleNums(updates [][]int) int {
+func FiveTwo() {
+	pairs, updates := parseInput("inputs/day5input.txt")
+	_, unverifiedUpdates := verifyUpdates(updates, pairs)
+	reordered := reorderUnverified(unverifiedUpdates, pairs)
+	middleNums := addMiddleNums(reordered)
+	fmt.Println(middleNums)
+}
+
+func addMiddleNums(updates [][]int) int {
 	var total int
 	for _, update := range updates {
 		updateLength := len(update)
@@ -24,8 +33,29 @@ func getMiddleNums(updates [][]int) int {
 	return total
 }
 
-func verifyUpdates(updates, pairs [][]int) [][]int {
+func reorderUnverified(updates [][]int, pairs [][]int) [][]int {
+	var reordered [][]int
+	for _, update := range updates {
+	INNERLOOP:
+		problemFound := false
+		for index := 1; index < len(update); index++ {
+			toCheckFirst := []int{update[index-1], update[index]}
+			if !ArrayContainsDeep(pairs, toCheckFirst) {
+				reflect.Swapper(update)(index-1, index)
+				problemFound = true
+			}
+		}
+		if problemFound {
+			goto INNERLOOP
+		}
+		reordered = append(reordered, update)
+	}
+	return reordered
+}
+
+func verifyUpdates(updates, pairs [][]int) ([][]int, [][]int) {
 	var verifiedUpdates [][]int
+	var unverifiedUpdates [][]int
 	for _, update := range updates {
 		verified := true
 		for index := range update {
@@ -35,6 +65,7 @@ func verifyUpdates(updates, pairs [][]int) [][]int {
 			toCheck := []int{update[index], update[index+1]}
 			if !ArrayContainsDeep(pairs, toCheck) {
 				verified = false
+				unverifiedUpdates = append(unverifiedUpdates, update)
 				break
 			}
 		}
@@ -42,13 +73,12 @@ func verifyUpdates(updates, pairs [][]int) [][]int {
 			verifiedUpdates = append(verifiedUpdates, update)
 		}
 	}
-	return verifiedUpdates
+	return verifiedUpdates, unverifiedUpdates
 }
 
 func parseInput(path string) ([][]int, [][]int) {
 	scanner, file := GetFileScanner(path)
 	defer file.Close()
-
 	var pairs [][]int
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -60,7 +90,6 @@ func parseInput(path string) ([][]int, [][]int) {
 		secondNum, _ := strconv.Atoi(pair[1])
 		pairs = append(pairs, []int{firstNum, secondNum})
 	}
-
 	var updates [][]int
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -68,6 +97,5 @@ func parseInput(path string) ([][]int, [][]int) {
 		updateInts := ArrayStringToInt(update)
 		updates = append(updates, updateInts)
 	}
-
 	return pairs, updates
 }
