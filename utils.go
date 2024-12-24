@@ -31,25 +31,26 @@ func GetValue(m map[int]int) int {
 	return 0
 }
 
-func StringToInt(input string) int {
-	output, err := strconv.Atoi(input)
-	if err != nil {
-		panic(err)
-	}
-	return output
-}
-
-func arrayCopy(orig []int) []int {
+func ArrayCopy(orig []int) []int {
 	newNums := make([]int, len(orig))
 	copy(newNums, orig[:])
 	return newNums
 }
 
-func ArrayContainsDeep(coords [][]int, target []int) bool {
-	for _, c := range coords {
-		if reflect.DeepEqual(c, target) {
+func ArrayContainsDeep(nums [][]int, target []int) bool {
+	for _, num := range nums {
+		if reflect.DeepEqual(num, target) {
 			return true
 		}
 	}
 	return false
+}
+
+func ArrayStringToInt(input []string) []int {
+	var output []int
+	for _, val := range input {
+		intVal, _ := strconv.Atoi(val)
+		output = append(output, intVal)
+	}
+	return output
 }

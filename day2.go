@@ -59,7 +59,7 @@ func compareLevelsWithDampener(report []int) int {
 	safe := compareLevels(report)
 	if safe == 0 {
 		for i := range report {
-			reportCopy := arrayCopy(report)
+			reportCopy := ArrayCopy(report)
 			newReport := append(reportCopy[:i], reportCopy[i+1:]...)
 			oneRemovedSafe := compareLevels(newReport)
 			if oneRemovedSafe == 1 {
